@@ -1,0 +1,34 @@
+# Source files
+nodes/
+credentials/
+*.ts
+tsconfig.json
+.eslintrc.js
+.eslintrc.prepublish.js
+gulpfile.js
+
+# Development files
+.vscode/
+.idea/
+.git/
+.gitignore
+*.log
+coverage/
+test/
+tests/
+spec/
+__tests__/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules
+node_modules/
+
+# Build artifacts (keep only dist)
+src/
+
+test.js
+
+.requirements.txt

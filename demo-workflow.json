@@ -1,0 +1,113 @@
+{
+  "name": "MongoDB Mongoose Demo Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "start-node",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "collection": "users",
+        "schemaDefinition": "{\n  \"name\": \"String\",\n  \"email\": \"String\",\n  \"age\": \"Number\",\n  \"createdAt\": { \"type\": \"Date\", \"default\": \"Date.now\" }\n}",
+        "document": "{\n  \"name\": \"{{ $json.name }}\",\n  \"email\": \"{{ $json.email }}\",\n  \"age\": \"{{ $json.age }}\"\n}"
+      },
+      "id": "create-user",
+      "name": "Create User",
+      "type": "n8n-nodes-mongoose.mongoDbMongoose",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "credentials": {
+        "mongoDbApi": {
+          "id": "your-mongodb-credentials-id",
+          "name": "Your MongoDB Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "find",
+        "collection": "users",
+        "query": "{\n  \"age\": { \"$gte\": 18 }\n}",
+        "options": {
+          "limit": 10,
+          "sort": "{ \"name\": 1 }"
+        }
+      },
+      "id": "find-users",
+      "name": "Find Adult Users",
+      "type": "n8n-nodes-mongoose.mongoDbMongoose",
+      "typeVersion": 1,
+      "position": [680, 300],
+      "credentials": {
+        "mongoDbApi": {
+          "id": "your-mongodb-credentials-id",
+          "name": "Your MongoDB Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "aggregate",
+        "collection": "users",
+        "pipeline": "[\n  { \"$group\": { \"_id\": null, \"avgAge\": { \"$avg\": \"$age\" }, \"count\": { \"$sum\": 1 } } }\n]"
+      },
+      "id": "aggregate-stats",
+      "name": "User Statistics",
+      "type": "n8n-nodes-mongoose.mongoDbMongoose",
+      "typeVersion": 1,
+      "position": [900, 300],
+      "credentials": {
+        "mongoDbApi": {
+          "id": "your-mongodb-credentials-id",
+          "name": "Your MongoDB Credentials"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Create User",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create User": {
+      "main": [
+        [
+          {
+            "node": "Find Adult Users",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Adult Users": {
+      "main": [
+        [
+          {
+            "node": "User Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1.0.0",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

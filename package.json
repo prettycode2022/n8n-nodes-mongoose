@@ -1,0 +1,70 @@
+{
+  "name": "n8n-nodes-mongoose",
+  "version": "1.0.0",
+  "description": "n8n community node for MongoDB operations using Mongoose ODM",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "mongodb",
+    "mongoose",
+    "database",
+    "nosql"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Hoánh Nguyễn",
+    "email": "prettycode2022@gmail.com"
+  },
+  "engines": {
+    "node": ">=18.10",
+    "pnpm": ">=8.6"
+  },
+  "packageManager": "pnpm@8.6.2",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && gulp build:icons",
+    "build:script": "./scripts/build.sh",
+    "dev": "tsc --watch",
+    "format": "prettier nodes credentials --write",
+    "lint": "eslint \"nodes/**/*.ts\" \"credentials/**/*.ts\"",
+    "lintfix": "eslint \"nodes/**/*.ts\" \"credentials/**/*.ts\" --fix",
+    "prepublishOnly": "npm run build && eslint \"nodes/**/*.ts\" \"credentials/**/*.ts\" -c .eslintrc.prepublish.js",
+    "publish:npm": "npm run build && npm publish",
+    "publish:script": "./scripts/publish.sh",
+    "test": "jest",
+    "test:all": "npx ts-node scripts/test-all-connections.ts",
+    "test:parser": "npx ts-node scripts/test-connection.ts",
+    "test:connection": "npm run test:all",
+    "demo": "npx ts-node scripts/demo-connections.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/MongoDbMultiDatabase.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/MongoDbMongoose/MongoDbMongoose.node.js",
+      "dist/nodes/MongoDbChangeStream/MongoDbChangeStream.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.115",
+    "@typescript-eslint/parser": "^5.59.8",
+    "eslint": "^8.42.0",
+    "eslint-plugin-n8n-nodes-base": "^1.11.0",
+    "gulp": "^5.0.1",
+    "n8n-workflow": "^1.0.0",
+    "prettier": "^2.8.8",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "mongoose": "^8.0.0"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}
