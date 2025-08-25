@@ -5,8 +5,8 @@ import {
   ITriggerResponse,
   NodeOperationError,
   LoggerProxy,
-  NodeConnectionType,
 } from 'n8n-workflow';
+import { NodeConnectionType } from 'n8n-workflow/dist/Interfaces';
 
 import mongoose, { Model, Schema, Connection } from 'mongoose';
 import { ChangeStream } from 'mongodb';
@@ -662,7 +662,7 @@ export class MongoDbChangeStream implements INodeType {
 
       // Create change stream based on watch level using dedicated connection
       if (watchLevel === 'collection') {
-        changeStream = model.watch(pipeline, changeStreamOptions);
+        changeStream = model.watch(pipeline, changeStreamOptions) as any;
         if (options.debug) {
           LoggerProxy.debug(`Change stream created for collection: ${collection}`);
         }
@@ -670,12 +670,12 @@ export class MongoDbChangeStream implements INodeType {
         if (!nodeConnection.db) {
           throw new Error('Database connection not available for database watch');
         }
-        changeStream = nodeConnection.db.watch(pipeline, changeStreamOptions);
+        changeStream = nodeConnection.db.watch(pipeline, changeStreamOptions) as any;
         if (options.debug) {
           LoggerProxy.debug(`Change stream created for database: ${database}`);
         }
       } else {
-        changeStream = nodeConnection.watch(pipeline, changeStreamOptions);
+        changeStream = nodeConnection.watch(pipeline, changeStreamOptions) as any;
         if (options.debug) {
           LoggerProxy.debug('Change stream created for deployment');
         }
@@ -708,7 +708,8 @@ export class MongoDbChangeStream implements INodeType {
       const saveFrequency = options.resumeTokenSaveFrequency || 'smart';
 
       // Handle change events
-      changeStream.on('change', (change: any) => {
+      if (changeStream) {
+        changeStream.on('change', (change: any) => {
         try {
           let outputData: any;
 
@@ -756,9 +757,9 @@ export class MongoDbChangeStream implements INodeType {
             type: 'processing_error'
           }])]);
         }
-      });
+        });
 
-      changeStream.on('error', (error: any) => {
+        changeStream.on('error', (error: any) => {
         if (!isClosing) {
           LoggerProxy.error('Change stream error', { error });
 
@@ -771,15 +772,15 @@ export class MongoDbChangeStream implements INodeType {
             }])]);
           }
         }
-      });
+        });
 
-      changeStream.on('close', () => {
+        changeStream.on('close', () => {
         if (!isClosing && capturedOptions.debug) {
           LoggerProxy.debug('Change stream closed unexpectedly');
         }
-      });
+        });
 
-      changeStream.on('resumeTokenChanged', async (token: any) => {
+        changeStream.on('resumeTokenChanged', async (token: any) => {
         // Resume token changes rất thường xuyên, chỉ log khi cần thiết
         if (capturedOptions.debug && Math.random() < 0.05) { // Chỉ log 5% token changes
           LoggerProxy.debug('Resume token changed');
@@ -846,7 +847,8 @@ export class MongoDbChangeStream implements INodeType {
                    !nodeConnection.db ? 'no database connection' : 'unknown'
           });
         }
-      });
+        });
+      }
 
       // Handle MongoDB connection events for dedicated connection
       nodeConnection.on('error', (error: any) => {

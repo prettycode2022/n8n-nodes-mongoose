@@ -4,8 +4,8 @@ import {
   INodeType,
   INodeTypeDescription,
   NodeOperationError,
-  NodeConnectionType,
 } from 'n8n-workflow';
+import { NodeConnectionType } from 'n8n-workflow/dist/Interfaces';
 
 import mongoose, { Schema, Model, Connection } from 'mongoose';
 import {
@@ -666,7 +666,6 @@ export class MongoDbMongoose implements INodeType {
 
               const updateResult = await model.updateMany(updateQuery, updateData, {
                 upsert: updateOptions.upsert || false,
-                new: true,
               });
 
               result = formatResponseWithQueryInfo(updateResult, updateIncludeQueryInfo, {
@@ -688,7 +687,6 @@ export class MongoDbMongoose implements INodeType {
 
               const updateOneResult = await model.updateOne(updateOneQuery, updateOneData, {
                 upsert: updateOneOptions.upsert || false,
-                new: true,
               });
 
               result = formatResponseWithQueryInfo(updateOneResult, updateOneIncludeQueryInfo, {
