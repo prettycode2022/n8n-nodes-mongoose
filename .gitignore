@@ -114,3 +114,5 @@ Thumbs.db
 
 test.js
 .requirements.txt
+
+*.tgz

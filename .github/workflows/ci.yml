@@ -93,7 +93,20 @@ jobs:
         
     - name: Check package size
       run: |
-        pnpm pack --dry-run
+        echo "Creating package tarball to check size..."
+        TARBALL=$(pnpm pack)
+        if [ -f "$TARBALL" ]; then
+          echo "✅ Package created: $TARBALL"
+          echo "📦 Package size: $(ls -lh $TARBALL | awk '{print $5}')"
+          echo "📁 Package contents (first 20 files):"
+          tar -tzf "$TARBALL" | head -20
+          echo "📊 Total files in package: $(tar -tzf $TARBALL | wc -l)"
+          echo "🗑️ Cleaning up tarball..."
+          rm -f "$TARBALL"
+        else
+          echo "❌ Failed to create package"
+          exit 1
+        fi
         
     - name: Archive build artifacts
       uses: actions/upload-artifact@v4
