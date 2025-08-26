@@ -9,6 +9,20 @@
   [![MongoDB](https://img.shields.io/badge/MongoDB-3.6%2B-green)](https://www.mongodb.com/)
 </div>
 
+## 🎬 In Action
+
+<div align="center">
+  
+### 🔄 MongoDB CRUD Operations in n8n
+![MongoDB Mongoose Workflow](assets/screenshots/workflow.png)
+*Professional MongoDB operations with full CRUD support, data validation, and error handling*
+
+### 🎯 Real-time Response & Results  
+![MongoDB Results](assets/screenshots/response.png)
+*Live data processing with comprehensive response formatting and change stream monitoring*
+
+</div>
+
 ---
 
 ## 📋 Table of Contents

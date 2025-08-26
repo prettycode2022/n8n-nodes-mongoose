@@ -40,7 +40,10 @@
     "test:connection": "npm run test:all"
   },
   "files": [
-    "dist"
+    "dist",
+    "assets/screenshots",
+    "README.md",
+    "LICENSE.md"
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,
