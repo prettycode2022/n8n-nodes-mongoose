@@ -1,9 +1,17 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 1.0.1)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -45,14 +53,21 @@ jobs:
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         
+    - name: Create Git Tag
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git tag -a "v${{ github.event.inputs.version }}" -m "Release v${{ github.event.inputs.version }}"
+        git push origin "v${{ github.event.inputs.version }}"
+        
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        name: Release ${{ github.ref_name }}
-        tag_name: ${{ github.ref_name }}
+        name: Release v${{ github.event.inputs.version }}
+        tag_name: v${{ github.event.inputs.version }}
         body: |
-          🚀 **n8n MongoDB Mongoose Nodes v${{ github.ref_name }}**
+          🚀 **n8n MongoDB Mongoose Nodes v${{ github.event.inputs.version }}**
           
           ### 📦 Installation
           ```bash
@@ -73,5 +88,5 @@ jobs:
           ### 📝 Documentation
           See [README.md](https://github.com/prettycode2022/n8n-nodes-mongoose#readme) for detailed usage instructions.
         draft: false
-        prerelease: false
+        prerelease: ${{ github.event.inputs.prerelease }}
         generate_release_notes: true
