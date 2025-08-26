@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+  packages: write
+  pull-requests: read
+
 jobs:
   release:
     name: Create Release
@@ -42,22 +47,31 @@ jobs:
         
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
+        token: ${{ secrets.GITHUB_TOKEN }}
         name: Release ${{ github.ref_name }}
+        tag_name: ${{ github.ref_name }}
         body: |
-          Changes in this Release:
-          - Check the commit history for detailed changes
+          🚀 **n8n MongoDB Mongoose Nodes v${{ github.ref_name }}**
           
-          ## Installation
+          ### 📦 Installation
           ```bash
           npm install n8n-nodes-mongoose
           ```
           
-          ## n8n Community Nodes
-          Install via n8n Community Nodes:
-          1. Go to Settings > Community Nodes
+          ### 🔧 n8n Community Nodes
+          1. Go to **Settings** → **Community Nodes**
           2. Install `n8n-nodes-mongoose`
+          3. Restart n8n
+          
+          ### ✨ Features
+          - 🔄 **MongoDB CRUD Operations** (Create, Read, Update, Delete)
+          - 📡 **Change Stream Triggers** (Real-time data monitoring)  
+          - 🔗 **Multi-database Support**
+          - 🛡️ **Type-safe Mongoose Integration**
+          
+          ### 📝 Documentation
+          See [README.md](https://github.com/prettycode2022/n8n-nodes-mongoose#readme) for detailed usage instructions.
         draft: false
         prerelease: false
+        generate_release_notes: true
