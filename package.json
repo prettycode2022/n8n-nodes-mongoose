@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-mongoose",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "n8n community node for MongoDB operations using Mongoose ODM",
   "keywords": [
     "n8n-community-node-package",
